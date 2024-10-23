@@ -23,7 +23,9 @@
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <div class="arrow-container">
       <button class="arrow-button up" onclick="changeDirection('UP')">↑</button>
-      <button class="arrow-button left" onclick="changeDirection('LEFT')">←</button>
+      <button class="arrow-button left" onclick="changeDirection('LEFT')">
+        ←
+      </button>
       <button class="arrow-button down" onclick="changeDirection('DOWN')">↓</button>
       <button class="arrow-button right" onclick="changeDirection('RIGHT')">→</button>
     </div>
@@ -55,7 +57,8 @@
       const box = 20;
       let snake, direction, fruit, score, speed, gameInterval, isPaused;
       const snakeImage = new Image();
-      snakeImage.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
+      snakeImage.src =
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
 
       function startGame() {
         reset();
@@ -93,9 +96,12 @@
 
       function changeDirection(newDirection) {
         if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
-        else if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
-        else if (newDirection === "LEFT" && direction !== "RIGHT") direction = "LEFT";
-        else if (newDirection === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+        else if (newDirection === "DOWN" && direction !== "UP")
+          direction = "DOWN";
+        else if (newDirection === "LEFT" && direction !== "RIGHT")
+          direction = "LEFT";
+        else if (newDirection === "RIGHT" && direction !== "LEFT")
+          direction = "RIGHT";
       }
 
       function spawnFruit() {
@@ -126,16 +132,28 @@
         if (direction === "UP") snakeY -= box;
         if (direction === "DOWN") snakeY += box;
 
+        // Check for wall collision
         if (
           snakeX < 0 ||
           snakeY < 0 ||
           snakeX >= canvas.width ||
-          snakeY >= canvas.height ||
-          collision(snake)
+          snakeY >= canvas.height
         ) {
-          clearInterval(gameInterval);
-          document.getElementById("finalScore").textContent = score;
-          document.getElementById("gameOverPopup").style.display = "block";
+          // Play wall sound effect before game over
+          document.getElementById("wallSound").play();
+          setTimeout(() => {
+            gameOver();
+          }, 1000); // Delay game over sound for a second to allow punch sound to play
+          return;
+        }
+
+        // Check for self-collision
+        if (collision(snake)) {
+          // Play wall sound effect before game over
+          document.getElementById("wallSound").play();
+          setTimeout(() => {
+            gameOver();
+          }, 1000); // Delay game over sound for a second to allow punch sound to play
           return;
         }
 
@@ -145,9 +163,7 @@
           score++;
           updateScoreDisplay();
           fruit = spawnFruit();
-          
-          // Play the eating sound
-          document.getElementById("eatSound").play();
+          document.getElementById("eatSound").play(); // Play eat sound effect
         } else {
           snake.pop();
         }
@@ -177,6 +193,8 @@
 
       function closePopup() {
         document.getElementById("gameOverPopup").style.display = "none"; // Close Game Over popup
+        document.getElementById("gameOverSound").pause(); // Stop the game over sound
+        document.getElementById("gameOverSound").currentTime = 0; // Reset the sound to the beginning
       }
 
       function collision(snake) {

@@ -7,8 +7,8 @@
     <title>Snake Game</title>
   </head>
   <body>
-    <h1>Snake Game</h1>
     <div class="controls">
+    <h1>Snake Game</h1>
       <label for="speedSelect">Speed:</label>
       <select id="speedSelect" onchange="changeSpeed()">
         <option value="100">Easy</option>
@@ -23,9 +23,7 @@
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <div class="arrow-container">
       <button class="arrow-button up" onclick="changeDirection('UP')">↑</button>
-      <button class="arrow-button left" onclick="changeDirection('LEFT')">
-        ←
-      </button>
+      <button class="arrow-button left" onclick="changeDirection('LEFT')">←</button>
       <button class="arrow-button down" onclick="changeDirection('DOWN')">↓</button>
       <button class="arrow-button right" onclick="changeDirection('RIGHT')">→</button>
     </div>
@@ -33,6 +31,7 @@
     <!-- Popup for Game Over -->
     <div class="popup" id="gameOverPopup">
       <p>Game Over! Your score: <span id="finalScore"></span></p>
+      <img src="cry.jpeg" alt="Cry" style="width: 100px; height: auto;" /> <!-- Add this line -->
       <button onclick="closePopup()">Close</button>
     </div>
 
@@ -57,8 +56,7 @@
       const box = 20;
       let snake, direction, fruit, score, speed, gameInterval, isPaused;
       const snakeImage = new Image();
-      snakeImage.src =
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
+      snakeImage.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
 
       function startGame() {
         reset();
@@ -96,12 +94,9 @@
 
       function changeDirection(newDirection) {
         if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
-        else if (newDirection === "DOWN" && direction !== "UP")
-          direction = "DOWN";
-        else if (newDirection === "LEFT" && direction !== "RIGHT")
-          direction = "LEFT";
-        else if (newDirection === "RIGHT" && direction !== "LEFT")
-          direction = "RIGHT";
+        else if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
+        else if (newDirection === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+        else if (newDirection === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
       }
 
       function spawnFruit() {

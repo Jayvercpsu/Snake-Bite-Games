@@ -6,8 +6,32 @@
     <link rel="stylesheet" href="style.css" />
     <title>Snake Game</title>
   </head>
+  <style>
+    /* Splash Screen Styles */
+    #splashScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff; /* Optional: Set background color */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999; /* Ensure it's on top of everything */
+    }
+    #splashScreen img {
+      max-width: 80%; /* Adjust the size of the logo */
+      height: auto; /* Maintain aspect ratio */
+    }
+  </style>
   <body>
-    <div class="controls">
+    <!-- Splash Screen -->
+    <div id="splashScreen">
+      <img src="logo.png" alt="Splash Logo" />
+    </div>
+
+    <div class="controls"> 
       <h1>Snake Game</h1>
       <label for="speedSelect">Speed:</label>
       <select id="speedSelect" onchange="changeSpeed()">
@@ -23,15 +47,21 @@
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <div class="arrow-container">
       <button class="arrow-button up" onclick="changeDirection('UP')">↑</button>
-      <button class="arrow-button left" onclick="changeDirection('LEFT')">←</button>
-      <button class="arrow-button down" onclick="changeDirection('DOWN')">↓</button>
-      <button class="arrow-button right" onclick="changeDirection('RIGHT')">→</button>
+      <button class="arrow-button left" onclick="changeDirection('LEFT')">
+        ←
+      </button>
+      <button class="arrow-button down" onclick="changeDirection('DOWN')">
+        ↓
+      </button>
+      <button class="arrow-button right" onclick="changeDirection('RIGHT')">
+        →
+      </button>
     </div>
 
     <!-- Popup for Game Over -->
     <div class="popup" id="gameOverPopup">
       <p>Game Over! Your score: <span id="finalScore"></span></p>
-      <img src="cry.jpeg" alt="Cry" style="width: 100px; height: auto;" />
+      <img src="cry.jpeg" alt="Cry" style="width: 100px; height: auto" />
       <button onclick="closePopup()">Close</button>
     </div>
 
@@ -57,7 +87,8 @@
       let snake, direction, fruit, score, speed, gameInterval, isPaused;
       let isGameOver = false; // Flag to track if the game is over
       const snakeImage = new Image();
-      snakeImage.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
+      snakeImage.src =
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
 
       function startGame() {
         reset();
@@ -96,9 +127,12 @@
 
       function changeDirection(newDirection) {
         if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
-        else if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
-        else if (newDirection === "LEFT" && direction !== "RIGHT") direction = "LEFT";
-        else if (newDirection === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+        else if (newDirection === "DOWN" && direction !== "UP")
+          direction = "DOWN";
+        else if (newDirection === "LEFT" && direction !== "RIGHT")
+          direction = "LEFT";
+        else if (newDirection === "RIGHT" && direction !== "LEFT")
+          direction = "RIGHT";
       }
 
       function spawnFruit() {
@@ -204,6 +238,14 @@
         }
         return false; // No collision
       }
+
+      // Function to hide the splash screen
+      function hideSplashScreen() {
+        document.getElementById("splashScreen").style.display = "none";
+      }
+
+      // Display the splash screen for 1.5 seconds
+      setTimeout(hideSplashScreen, 1500);
     </script>
   </body>
 </html>

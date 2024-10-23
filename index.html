@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="controls">
-    <h1>Snake Game</h1>
+      <h1>Snake Game</h1>
       <label for="speedSelect">Speed:</label>
       <select id="speedSelect" onchange="changeSpeed()">
         <option value="100">Easy</option>
@@ -31,7 +31,7 @@
     <!-- Popup for Game Over -->
     <div class="popup" id="gameOverPopup">
       <p>Game Over! Your score: <span id="finalScore"></span></p>
-      <img src="cry.jpeg" alt="Cry" style="width: 100px; height: auto;" /> <!-- Add this line -->
+      <img src="cry.jpeg" alt="Cry" style="width: 100px; height: auto;" />
       <button onclick="closePopup()">Close</button>
     </div>
 
@@ -55,6 +55,7 @@
 
       const box = 20;
       let snake, direction, fruit, score, speed, gameInterval, isPaused;
+      let isGameOver = false; // Flag to track if the game is over
       const snakeImage = new Image();
       snakeImage.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
 
@@ -63,6 +64,7 @@
         speed = parseInt(document.getElementById("speedSelect").value);
         gameInterval = setInterval(gameLoop, speed);
         isPaused = false;
+        isGameOver = false; // Reset game over flag
         document.getElementById("pauseButton").textContent = "⏸ Pause";
         document.getElementById("bgMusic").play(); // Play background music
       }
@@ -179,6 +181,8 @@
       }
 
       function gameOver() {
+        if (isGameOver) return; // Prevent showing popup again if game is already over
+        isGameOver = true; // Set the game over flag
         clearInterval(gameInterval);
         document.getElementById("bgMusic").pause(); // Pause background music
         document.getElementById("gameOverSound").play(); // Play game over sound
@@ -195,18 +199,10 @@
       function collision(snake) {
         for (let i = 1; i < snake.length; i++) {
           if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
-            return true;
+            return true; // Collision with itself
           }
         }
-        return false;
-      }
-
-      function changeSpeed() {
-        speed = parseInt(document.getElementById("speedSelect").value);
-        if (!isPaused) {
-          clearInterval(gameInterval);
-          gameInterval = setInterval(gameLoop, speed);
-        }
+        return false; // No collision
       }
     </script>
   </body>

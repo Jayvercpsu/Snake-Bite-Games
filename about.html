@@ -8,58 +8,125 @@
     /* Base styles */
     body {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column; 
+      justify-content: flex-start; /* Align items to the top */
+      align-items: center; /* Center items horizontally */
       height: 100vh;
       background-color: #1c1e22;
       color: #ffffff;
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
+      font-family: 'Arial', sans-serif; 
+      margin: 0; /* Remove default margin */
+      padding: 20px; /* Padding for spacing */
+      text-align: left; /* Align text to the left */ 
+      overflow-y: auto; /* Allow scrolling if content overflows */
     }
+
     h1 {
-      font-size: 2.5rem;
+      font-size: 3rem; /* Increased font size */
       color: #61dafb;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Added text shadow */
+      text-align: center; /* Centered heading */
     }
+
     .content, .creator {
-      max-width: 600px;
+      max-width: 600px; /* Limit the width for larger screens */
+      width: 100%; /* Full width for responsiveness */
       margin: 15px 0;
       padding: 20px;
       background-color: #282c34;
-      border-radius: 8px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      border-radius: 15px; /* More rounded corners */
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6); /* Deeper shadow for depth */
+      transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effect */
     }
+
+    .content:hover, .creator:hover {
+      transform: translateY(-8px); /* Lift effect on hover */
+      box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+    }
+
     p {
       font-size: 1.2rem;
       color: #d3d3d3;
       line-height: 1.6;
       margin: 10px 0;
     }
+
     .creator p {
       color: #61dafb;
+    }
+
+    #backButton {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            font-size: 1.5em; /* Increased font size */
+            color: #282c34; /* Dark color for contrast */
+            background-color: #61dafb; /* Primary color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s; /* Transition effects */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center; /* Center arrow vertically */
+        }
+
+        #backButton:hover {
+            background-color: #21a1f1; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift effect on hover */
+        }
+
+        #backButton:before {
+            content: '←'; /* Left arrow character */
+            margin-right: 10px; /* Space between arrow and button text */
+            font-size: 1.2em; /* Font size for the arrow */
+        }
+
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+      h1 {
+        font-size: 2.5rem; /* Responsive heading size */
+      }
+      p {
+        font-size: 1.1rem; /* Responsive paragraph size */
+      }
+    }
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem; /* Smaller heading size */
+      }
+      p {
+        font-size: 1rem; /* Smaller paragraph size */
+      }
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem; /* Further reduce heading size */
+      }
+      p {
+        font-size: 0.9rem; /* Further reduce paragraph size */
+      }
     }
   </style>
 </head>
 <body>
-  <h1>About Snake Game</h1>
-  <div class="content">
-    <p>
-      Snake Game is a classic arcade experience where players guide a snake to consume food, 
-      grow longer, and avoid obstacles or colliding with their own tail. The game intensifies 
-      as the snake lengthens, testing both reaction speed and strategic planning.
-    </p>
-  </div>
-  <div class="creator">
-    <h2>Meet the Creator</h2>
-    <p>
-      Created by <strong>J-Aldev</strong> on 10/24/2024, this version of the Snake Game blends 
-      the nostalgic charm of the original with a refreshed visual style and smooth controls. J-Aldev 
-      is passionate about developing engaging games and applications, bringing classic games into 
-      the modern era with updated designs and gameplay enhancements.
-    </p>
-  </div>
+    <button id="backButton" onclick="window.location.href='index.html'">Back to Game</button>
+    <h1>About Snake Game</h1>
+    <div class="content">
+      <p>
+        Snake Game is a classic arcade experience where players guide a snake to consume food, 
+        grow longer, and avoid obstacles or colliding with their own tail. The game intensifies 
+        as the snake lengthens, testing both reaction speed and strategic planning.
+      </p>
+    </div>
+    <div class="creator">
+      <h2>Meet the Creator</h2>
+      <p>
+        Created by <strong>J-Aldev</strong> on 10/24/2024, this version of the Snake Game blends 
+        the nostalgic charm of the original with a refreshed visual style and smooth controls. J-Aldev 
+        is passionate about developing engaging games and applications, bringing classic games into 
+        the modern era with updated designs and gameplay enhancements.
+      </p>
+    </div>
 </body>
 </html>

@@ -1,39 +1,249 @@
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <link rel="stylesheet" href="style.css" />
-            <title>Best Score</title>
-        </head>
-        <body>
-            <h1>Your Best Score</h1>
-            <div id="bestScoreDisplay">Best Score: 0</div>
-            <h2>Score History:</h2>
-            <ul id="scoreHistoryDisplay"></ul>
-            
-            <script>
-                // Retrieve the best score and scores array from localStorage
-                const bestScore = localStorage.getItem("highScore") || 0;
-                const scores = JSON.parse(localStorage.getItem("scores")) || [];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Best Score</title>
+    <style>
+        /* Base styles */
+        body {
+            background-color: #1c1e22;
+            font-family: "Arial", sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: flex-start; /* Align items to the top */
+            text-align: center;
+        }
 
-                // Display the best score
-                document.getElementById("bestScoreDisplay").textContent = "Best Score: " + bestScore;
+        h1 {
+            color: #61dafb; /* Light blue color */
+            margin: 20px 0;
+            font-size: 3rem; /* Increased font size */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Added text shadow */
+        }
 
-                // Display the score history
-                const scoreHistoryDisplay = document.getElementById("scoreHistoryDisplay");
-                scores.forEach((score, index) => {
-                    const listItem = document.createElement("li");
-                    listItem.textContent = "Game " + (index + 1) + ": Score " + score;
-                    scoreHistoryDisplay.appendChild(listItem);
-                });
+        #backButton {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            font-size: 1.5em; /* Increased font size */
+            color: #282c34; /* Dark color for contrast */
+            background-color: #61dafb; /* Primary color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s; /* Transition effects */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center; /* Center arrow vertically */
+        }
 
-                // If there are no scores, show a message
-                if (scores.length === 0) {
-                    const noScoresItem = document.createElement("li");
-                    noScoresItem.textContent = "No scores recorded yet.";
-                    scoreHistoryDisplay.appendChild(noScoresItem);
+        #backButton:hover {
+            background-color: #21a1f1; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift effect on hover */
+        }
+
+        #backButton:before {
+            content: "←"; /* Left arrow character */
+            margin-right: 10px; /* Space between arrow and button text */
+            font-size: 1.2em; /* Font size for the arrow */
+        }
+
+        #bestScoreDisplay {
+            font-size: 2em;
+            color: #2e8b57; /* Green color for best score */
+            margin-top: 10px;
+            padding: 15px;
+            border: 2px solid #2e8b57; /* Border around best score */
+            border-radius: 8px;
+            background-color: #282c34; /* Darker background for contrast */
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* Deeper shadow for depth */
+            transition: transform 0.2s ease; /* Hover effect */
+        }
+
+        #bestScoreDisplay:hover {
+            transform: scale(1.02); /* Slight scale effect on hover */
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 2rem; /* Adjusted font size */
+        }
+
+        /* Scrollable score history */
+        #scoreHistoryWrapper {
+            max-height: 200px; /* Set a max height for the scrollable area */
+            overflow-y: auto; /* Enable vertical scrolling */
+            width: 100%;
+            max-width: 400px; /* Set a maximum width */
+            border: 2px solid #61dafb; /* Border around score history */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #292b2f; /* Background color for contrast */
+            margin: 0 auto; /* Center the score history */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0; /* Remove default margins */
+        }
+
+        li {
+            padding: 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+            font-size: 1.2em;
+            background: #292b2f; /* Dark gray background */
+            position: relative; /* For positioning the dropdown */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        /* Dropdown menu */
+        .dropdown {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: none; /* Hidden by default */
+            background: #61dafb;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            cursor: pointer;
+            color: #282c34;
+        }
+
+        .dropdown-item:hover {
+            background: #21a1f1; /* Darker blue on hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            #backButton {
+                width: 100%; /* Full width on small screens */
+            }
+
+            h1,
+            h2 {
+                font-size: 1.5em; /* Adjust font size for smaller screens */
+            }
+
+            #bestScoreDisplay {
+                font-size: 1.5em; /* Adjust font size for smaller screens */
+            }
+
+            li {
+                font-size: 1em; /* Adjust list item font size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="backButton" onclick="window.location.href='index.html'">
+        Back to Game
+    </button>
+    <h1>Your Highest Score</h1>
+    <div id="bestScoreDisplay">0</div>
+    <br>
+    <h2>Score History:</h2>
+    <div id="scoreHistoryWrapper">
+        <ul id="scoreHistoryDisplay"></ul>
+    </div>
+
+    <button onclick="deleteAllScores()" style="margin-top: 20px; padding: 10px 20px; font-size: 1.5em; color: #ffffff; background-color: #d9534f; border: none; border-radius: 5px; cursor: pointer;">Delete All Scores</button>
+
+    <script>
+        // Retrieve the best score and scores array from localStorage
+        let bestScore = localStorage.getItem("highScore") || 0;
+        let scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+        // Display the best score
+        document.getElementById("bestScoreDisplay").textContent = "" + bestScore;
+
+        // Display the score history
+        const scoreHistoryDisplay = document.getElementById("scoreHistoryDisplay");
+        scores.forEach((score, index) => {
+            if (score > 0) { // Only include scores greater than 0
+                const listItem = document.createElement("li");
+                listItem.textContent = "Game " + (index + 1) + ": Score " + score;
+
+                // Create the dropdown menu for actions
+                const dropdown = document.createElement("div");
+                dropdown.className = "dropdown";
+                dropdown.innerHTML = `
+                    <div class="dropdown-item" onclick="deleteScore(${index})">Delete Score</div>
+                `;
+                listItem.appendChild(dropdown);
+
+                // Add three dots for the dropdown trigger
+                const threeDots = document.createElement("span");
+                threeDots.textContent = "⋮"; // Three dots character
+                threeDots.style.cursor = "pointer";
+                threeDots.style.marginLeft = "30px"; // Space between score and dots
+                threeDots.onclick = function (event) {
+                    event.stopPropagation(); // Prevent event bubbling to the list item
+                    // Toggle dropdown visibility
+                    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+                    closeDropdowns(dropdown); // Close other dropdowns when opening this one
+                };
+
+                listItem.appendChild(threeDots);
+                scoreHistoryDisplay.appendChild(listItem);
+            }
+        });
+
+        // If there are no scores, show a message
+        if (scores.length === 0 || !scores.some(score => score > 0)) {
+            const noScoresItem = document.createElement("li");
+            noScoresItem.textContent = "No scores recorded yet.";
+            scoreHistoryDisplay.appendChild(noScoresItem);
+        }
+
+        // Function to delete individual score
+        function deleteScore(index) {
+            scores.splice(index, 1); // Remove score from array
+            localStorage.setItem("scores", JSON.stringify(scores)); // Update localStorage
+            updateBestScore(); // Update best score after deletion
+            location.reload(); // Reload page to update displayed scores
+        }
+
+        // Function to delete all scores
+        function deleteAllScores() {
+            const confirmation = confirm("Are you sure you want to delete all scores? This action cannot be undone.");
+            if (confirmation) {
+                scores = []; // Clear scores array
+                localStorage.removeItem("scores"); // Remove from localStorage
+                bestScore = 0; // Reset best score
+                localStorage.setItem("highScore", bestScore); // Update localStorage for best score
+                updateBestScore(); // Update displayed best score
+                location.reload(); // Reload page to update displayed scores
+            }
+        }
+
+        // Update best score display based on scores array
+        function updateBestScore() {
+            bestScore = Math.max(0, ...scores); // Find the highest score or 0 if none
+            localStorage.setItem("highScore", bestScore); // Update localStorage
+            document.getElementById("bestScoreDisplay").textContent = "" + bestScore; // Display the new best score
+        }
+
+        // Function to close all dropdowns except the one that was clicked
+        function closeDropdowns(except) {
+            const dropdowns = document.querySelectorAll(".dropdown");
+            dropdowns.forEach((dropdown) => {
+                if (dropdown !== except) {
+                    dropdown.style.display = "none"; // Hide dropdown
                 }
-            </script>
-        </body>
-        </html>
+            });
+        }
+    </script>
+</body>
+</html>

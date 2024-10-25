@@ -7,9 +7,8 @@ body {
     height: 100vh;
     background-color: #1c1e22;
     font-family: 'Arial', sans-serif; 
-    color: #ffffff;
-    margin: 0;
-    padding: 20px;
+    color: #ffffff; 
+    padding: 5px;  
 }
 
 canvas {
@@ -66,7 +65,6 @@ select {
     align-items: center;
     margin: 10px 0;
 } 
-/* Default styles for desktop */
 .arrow-container {
 display: flex;
 justify-content: center;
@@ -99,7 +97,6 @@ box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3), inset -5px -5px 10px rgba(255
 box-shadow: 7px 7px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Control buttons */
 button {
 padding: 12px 24px;
 font-size: 16px;
@@ -116,21 +113,19 @@ button:hover {
 background-color: #4da3d1;
 }
 
-/* Author section */
 .author {
 position: static;
-margin-top: 50px;
+margin-top: 100px;
 text-align: center;
 font-size: 14px;
 clear: both;
 }
 
-/* Responsive styles for mobile */
 @media (max-width: 600px) {
 .arrow-container {
 display: grid;
 grid-template-columns: 1fr 1fr 1fr;
-grid-gap: 0px; /* Reduced gap to make buttons closer */
+grid-gap: 0px;
 justify-items: center;
 align-items: center;
 margin-top: 20px;
@@ -159,12 +154,11 @@ grid-column: 2;
 grid-column: 3;
 }
 
-/* Control buttons */
 .controls {
 display: flex;
 flex-wrap: wrap;
 justify-content: space-between;
-margin-top: 20px;
+margin-top: 50px;
 width: 100%;
 padding: 0 10px;
 }
@@ -172,13 +166,12 @@ padding: 0 10px;
 .controls button {
 padding: 10px 14px;
 font-size: 14px;
-margin: 5px 0; /* Adjusted margin for tighter fit */
+margin: 5px 0;
 flex-grow: 1;
 text-align: center;
-max-width: 32%; /* Ensure buttons fit within the screen */
+max-width: 32%;
 }
 
-/* Author section */
 .author {
 margin-top: 40px;
 font-size: 12px;
@@ -194,6 +187,8 @@ width: 100%;
 max-width: 320px;
 height: auto;
 }
+
+
 }
 
 
@@ -204,7 +199,6 @@ height: auto;
 #pauseButton {
     background-color: #ffcc00;
 }
-/* Popup Styles */
 .popup {
     display: none;
     position: fixed;
@@ -231,3 +225,22 @@ height: auto;
     font-size: 14px;
     color: #ffffff;
 } 
+
+
+
+  #splashScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  #splashScreen img {
+    max-width: 80%;
+    height: auto;
+  }

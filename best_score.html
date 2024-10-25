@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Best Scores</title>
+  <style>
+    /* Base styles */
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #1c1e22;
+      color: #ffffff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #61dafb;
+      margin-bottom: 20px;
+    }
+    .score-list {
+      list-style-type: none;
+      padding: 0;
+      width: 100%;
+      max-width: 500px;
+    }
+    .score-list li {
+      background-color: #282c34;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+    .score-list li:hover {
+      transform: scale(1.03);
+      background-color: #3a3f47;
+    }
+    .player-score {
+      color: #ffffff;
+      font-size: 1.2rem;
+    }
+    .back-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #61dafb;
+      color: #282c34;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .back-button:hover {
+      background-color: #47a6d9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Best Scores</h1>
+  <ul class="score-list" id="scoreList">
+    <!-- Scores will be populated here -->
+  </ul>
+  <button class="back-button" onclick="window.location.href='home.html'">Back to Game</button>
+
+  <script>
+    // Load all scores from localStorage
+    window.onload = function () {
+      const scores = JSON.parse(localStorage.getItem("scores")) || [];
+      const scoreList = document.getElementById("scoreList");
+
+      // Check if there are scores to display
+      if (scores.length === 0) {
+        scoreList.innerHTML = "<li>No scores available</li>";
+      } else {
+        // Filter out zero scores and create list items for the rest
+        const filteredScores = scores.filter(score => score > 0);
+        if (filteredScores.length === 0) {
+          scoreList.innerHTML = "<li>No scores available</li>";
+        } else {
+          filteredScores.forEach((score, index) => {
+            const li = document.createElement("li");
+            li.innerHTML = `<span class="player-score">${index + 1}. ${score} pts</span>`;
+            scoreList.appendChild(li);
+          });
+        }
+      }
+    };
+  </script>
+</body>
+</html>

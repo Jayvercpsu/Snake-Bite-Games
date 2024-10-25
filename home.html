@@ -198,14 +198,33 @@
                 }
 
                 function gameOver() {
-                  if (isGameOver) return; // Prevent showing popup again if game is already over
-                  isGameOver = true; // Set the game over flag
-                  clearInterval(gameInterval);
-                  document.getElementById("bgMusic").pause(); // Pause background music
-                  document.getElementById("gameOverSound").play(); // Play game over sound
-                  document.getElementById("finalScore").textContent = score;
-                  document.getElementById("gameOverPopup").style.display = "block"; // Show Game Over popup
-                }
+    if (isGameOver) return; // Prevent showing popup again if game is already over
+    isGameOver = true; // Set the game over flag
+    clearInterval(gameInterval);
+    document.getElementById("bgMusic").pause(); // Pause background music
+    document.getElementById("gameOverSound").play(); // Play game over sound
+    document.getElementById("finalScore").textContent = score; // Display the final score
+    document.getElementById("gameOverPopup").style.display = "block"; // Show Game Over popup
+
+    // Retrieve the scores array and high score from localStorage
+    let scores = JSON.parse(localStorage.getItem("scores")) || [];
+    let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+
+    // Update scores array
+    scores.push(score);
+    localStorage.setItem("scores", JSON.stringify(scores));
+
+    // Check for high score
+    if (score > highScore) {
+        highScore = score; // Update the high score
+        localStorage.setItem("highScore", highScore); // Save the new high score
+    }
+
+    // Update score history and high score display
+    document.getElementById("highScoreDisplay").textContent = "Best Score: " + highScore; // Update high score display
+    document.getElementById("scoreHistory").textContent = scores.join(", "); // Update score history display
+}
+
 
                 function closePopup() {
                   document.getElementById("gameOverPopup").style.display = "none"; // Close Game Over popup

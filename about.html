@@ -140,6 +140,8 @@
 
     <!-- Audio element for the sound effect -->
     <audio id="sound-effect" src="perfect-fart.mp3" preload="auto"></audio>
+    <audio id="bg-music" src="bgmusic.mp3" preload="auto" loop></audio> <!-- Background music --> 
+
 
     <script>
       function playSound(event, url) {
@@ -154,6 +156,17 @@
           window.location.href = url;
         }, 300); // Adjust time as needed (1000 ms = 1 second)
       }
+
+      window.onload = function() {
+        const bgMusic = document.getElementById("bg-music");
+        bgMusic.play().catch((error) => {
+          console.error("Error playing background music:", error);
+        });
+      };
+
+         // Stop background music when navigating away
+         const bgMusic = document.getElementById("bg-music");
+        bgMusic.pause(); // Pause the background music
     </script>
   </body>
 </html>

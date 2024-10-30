@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css" />
     <title>Best Score</title>
     <style>
-        /* Base styles */
+      
         body {
             background-color: #1c1e22;
             font-family: "Arial", sans-serif;
@@ -97,11 +97,16 @@
             padding: 15px;
             margin: 5px 0;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
             font-size: 1.2em;
             background: #292b2f; /* Dark gray background */
             position: relative; /* For positioning the dropdown */
-            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        li:hover {
+            background: #61dafb; /* Highlight color on hover */
+            color: #282c34; /* Dark text on hover */
         }
 
         /* Dropdown menu */
@@ -158,11 +163,9 @@
         <ul id="scoreHistoryDisplay"></ul>
     </div>
 
-    <button onclick="deleteAllScores()" style="margin-top: 20px; padding: 10px 20px; font-size: 1.5em; color: #ffffff; background-color: #d9534f; border: none; border-radius: 5px; cursor: pointer;">Delete All Scores</button>
-
     <script>
         // Retrieve the best score and scores array from localStorage
-        let bestScore = localStorage.getItem("highScore") || 0;
+        const bestScore = localStorage.getItem("highScore") || 0;
         let scores = JSON.parse(localStorage.getItem("scores")) || [];
 
         // Display the best score
@@ -187,12 +190,10 @@
                 const threeDots = document.createElement("span");
                 threeDots.textContent = "⋮"; // Three dots character
                 threeDots.style.cursor = "pointer";
-                threeDots.style.marginLeft = "30px"; // Space between score and dots
-                threeDots.onclick = function (event) {
-                    event.stopPropagation(); // Prevent event bubbling to the list item
+                threeDots.style.marginLeft = "10px"; // Space between score and dots
+                threeDots.onclick = function () {
                     // Toggle dropdown visibility
                     dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-                    closeDropdowns(dropdown); // Close other dropdowns when opening this one
                 };
 
                 listItem.appendChild(threeDots);
@@ -211,39 +212,29 @@
         function deleteScore(index) {
             scores.splice(index, 1); // Remove score from array
             localStorage.setItem("scores", JSON.stringify(scores)); // Update localStorage
-            updateBestScore(); // Update best score after deletion
             location.reload(); // Reload page to update displayed scores
         }
 
         // Function to delete all scores
         function deleteAllScores() {
-            const confirmation = confirm("Are you sure you want to delete all scores? This action cannot be undone.");
-            if (confirmation) {
-                scores = []; // Clear scores array
-                localStorage.removeItem("scores"); // Remove from localStorage
-                bestScore = 0; // Reset best score
-                localStorage.setItem("highScore", bestScore); // Update localStorage for best score
-                updateBestScore(); // Update displayed best score
-                location.reload(); // Reload page to update displayed scores
-            }
+            scores = []; // Clear scores array
+            localStorage.removeItem("scores"); // Remove from localStorage
+            location.reload(); // Reload page to update displayed scores
         }
 
-        // Update best score display based on scores array
-        function updateBestScore() {
-            bestScore = Math.max(0, ...scores); // Find the highest score or 0 if none
-            localStorage.setItem("highScore", bestScore); // Update localStorage
-            document.getElementById("bestScoreDisplay").textContent = "" + bestScore; // Display the new best score
-        }
+        // Create a button to delete all scores
+        const deleteAllButton = document.createElement("button");
+        deleteAllButton.textContent = "Delete All Scores";
+        deleteAllButton.style.marginTop = "20px";
+        deleteAllButton.style.padding = "10px 20px";
+        deleteAllButton.style.fontSize = "1.2em";
+        deleteAllButton.style.backgroundColor = "#ff4d4d"; // Red color for danger
+        deleteAllButton.style.border = "none";
+        deleteAllButton.style.borderRadius = "5px";
+        deleteAllButton.style.cursor = "pointer";
+        deleteAllButton.onclick = deleteAllScores;
 
-        // Function to close all dropdowns except the one that was clicked
-        function closeDropdowns(except) {
-            const dropdowns = document.querySelectorAll(".dropdown");
-            dropdowns.forEach((dropdown) => {
-                if (dropdown !== except) {
-                    dropdown.style.display = "none"; // Hide dropdown
-                }
-            });
-        }
+        document.body.appendChild(deleteAllButton);
     </script>
 </body>
 </html>

@@ -4,6 +4,8 @@
               <meta charset="UTF-8" />
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
               <link rel="stylesheet" href="style.css" />
+              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
               <title>Snake Game</title>
             </head>
             <style>
@@ -16,7 +18,13 @@
               </div>
 
               <div class="controls">  
-                <label for="speedSelect">Speed:</label>
+                <label for="speedSelect">
+                  <a style="color: #ffffff; text-decoration: dashed;" href="index.html" class="btn btn-link">
+                      &#8592; Back
+                  </a>
+              </label>
+              
+              
                 <select id="speedSelect" onchange="changeSpeed()">
                   <option value="100">Easy</option>
                   <option value="70">Medium</option>

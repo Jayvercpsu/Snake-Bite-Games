@@ -1,261 +1,281 @@
-          <!DOCTYPE html>
-          <html lang="en">
-            <head>
-              <meta charset="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <link rel="stylesheet" href="style.css" />
-              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
 
-              <title>Snake Game</title>
-            </head>
-            <style>
-            
-            </style>
-            <body>
-              <!-- Splash Screen -->
-              <div id="splashScreen">
-                <img src="logo.png" alt="Splash Logo" />
-              </div>
+    <title>Snake Game</title>
+  </head>
+  <style></style>
+  <body>
+    <!-- Splash Screen -->
+    <div id="splashScreen">
+      <img src="logo.png" alt="Splash Logo" />
+    </div>
 
-              <div class="controls">  
-                <label for="speedSelect">
-                  <a style="color: #ffffff; text-decoration: dashed;" href="index.html" class="btn btn-link">
-                      &#8592; Back
-                  </a>
-              </label>
-              
-              
-                <select id="speedSelect" onchange="changeSpeed()">
-                  <option value="100">Easy</option>
-                  <option value="70">Medium</option>
-                  <option value="50">Hard</option>
-                </select>
-                <button id="startButton" onclick="startGame()">🎮Play</button>
-                <button id="pauseButton" onclick="togglePause()">⏸Pause</button>
-                <button onclick="startGame()">🔄Restart</button>
-                <div class="score" id="scoreDisplay">Score: 0</div>
-              </div>
-              <canvas id="gameCanvas" width="400" height="400"></canvas>
-              <div class="arrow-container">
-                <button class="arrow-button up" onclick="changeDirection('UP')">↑</button>
-                <button class="arrow-button left" onclick="changeDirection('LEFT')">
-                  ←
-                </button>
-                <button class="arrow-button down" onclick="changeDirection('DOWN')">
-                  ↓
-                </button>
-                <button class="arrow-button right" onclick="changeDirection('RIGHT')">
-                  →
-                </button>
-              </div>
+    <div class="controls">
+      <label for="speedSelect">
+        <a
+          style="color: #ffffff; text-decoration: dashed"
+          onclick="playSound(event, 'index.html')"
+          class="btn btn-link"
+        >
+          &#8592; Back
+        </a>
+      </label>
 
-              <!-- Popup for Game Over -->
-              <div class="popup" id="gameOverPopup">
-                <p>Game Over! Your score: <span id="finalScore"></span></p>
-                <img src="cry.jpeg" alt="Cry" style="width: 100px; height: auto" />
-                <button onclick="closePopup()">Close</button>
-              </div>
+      <select id="speedSelect" onchange="changeSpeed()">
+        <option value="100">Easy</option>
+        <option value="70">Medium</option>
+        <option value="50">Hard</option>
+      </select>
+      <button id="startButton" onclick="startGame()">🎮Play</button>
+      <button id="pauseButton" onclick="togglePause()">⏸Pause</button>
+      <button onclick="startGame()">🔄Restart</button>
+      <div class="score" id="scoreDisplay">Score: 0</div>
+    </div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="arrow-container">
+      <button class="arrow-button up" onclick="changeDirection('UP')">↑</button>
+      <button class="arrow-button left" onclick="changeDirection('LEFT')">
+        ←
+      </button>
+      <button class="arrow-button down" onclick="changeDirection('DOWN')">
+        ↓
+      </button>
+      <button class="arrow-button right" onclick="changeDirection('RIGHT')">
+        →
+      </button>
+    </div>
 
-              <!-- Popup for Pause -->
-              <div class="popup" id="pausePopup">
-                <p>Game Paused</p>
-                <button onclick="togglePause()">Resume</button>
-              </div>
-          <p>
-              <div class="author">Author: j-aldev</div>
+    <!-- Popup for Game Over -->
+    <div class="popup" id="gameOverPopup">
+      <p>Game Over! Your score: <span id="finalScore"></span></p>
+      <img src="cry.jpeg" alt="Cry" style="width: 100px; height: auto" />
+      <button onclick="closePopup()">Close</button>
+    </div>
 
-              <!-- Audio Elements -->
-              <audio id="bgMusic" src="bgmusic.mp3" loop></audio>
-              <audio id="eatSound" src="ah.mp3"></audio>
-              <audio id="wallSound" src="punch.mp3"></audio>
-              <audio id="gameOverSound" src="gameover.mp3"></audio>
+    <!-- Popup for Pause -->
+    <div class="popup" id="pausePopup">
+      <p>Game Paused</p>
+      <button onclick="togglePause()">Resume</button>
+    </div>
+    <p></p>
+    <div class="author">Author: j-aldev</div>
 
-              <script>
-                const canvas = document.getElementById("gameCanvas");
-                const ctx = canvas.getContext("2d");
+    <!-- Audio Elements -->
+    <audio id="bgMusic" src="bgmusic.mp3" loop></audio>
+    <audio id="eatSound" src="ah.mp3"></audio>
+    <audio id="wallSound" src="punch.mp3"></audio>
+    <audio id="gameOverSound" src="gameover.mp3"></audio>
+    <!-- Audio element for the sound effect -->
+    <audio id="sound-effect" src="perfect-fart.mp3" preload="auto"></audio>
 
-                const box = 20;
-                let snake, direction, fruit, score, speed, gameInterval, isPaused;
-                let isGameOver = false; // Flag to track if the game is over
-                const snakeImage = new Image();
-                snakeImage.src =
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
+    <script>
+      function playSound(event, url) {
+        event.preventDefault(); // Prevent default link behavior
+        const sound = document.getElementById("sound-effect");
+        sound.currentTime = 0; // Rewind to the start
+        sound.play().catch((error) => {
+          console.error("Error playing sound:", error);
+        });
+        // Navigate to the URL after a delay
+        setTimeout(() => {
+          window.location.href = url;
+        }, 300); // Adjust time as needed (1000 ms = 1 second)
+      }
+    </script>
+    <script>
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
 
-                function startGame() {
-                  reset();
-                  speed = parseInt(document.getElementById("speedSelect").value);
-                  gameInterval = setInterval(gameLoop, speed);
-                  isPaused = false;
-                  isGameOver = false; // Reset game over flag
-                  document.getElementById("pauseButton").textContent = "⏸ Pause";
-                  document.getElementById("bgMusic").play(); // Play background music
-                }
+      const box = 20;
+      let snake, direction, fruit, score, speed, gameInterval, isPaused;
+      let isGameOver = false; // Flag to track if the game is over
+      const snakeImage = new Image();
+      snakeImage.src =
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrUv61E-ZYbV3hg746MOLkcrD_hG_yF9chQ&s"; // Snake GIF
 
-                function reset() {
-                  clearInterval(gameInterval);
-                  snake = [{ x: 9 * box, y: 9 * box }];
-                  direction = "RIGHT";
-                  fruit = spawnFruit();
-                  score = 0;
-                  updateScoreDisplay();
-                  document.removeEventListener("keydown", handleKeyPress);
-                  document.addEventListener("keydown", handleKeyPress);
-                  document.getElementById("gameOverPopup").style.display = "none"; // Hide the Game Over popup
-                }
+      function startGame() {
+        reset();
+        speed = parseInt(document.getElementById("speedSelect").value);
+        gameInterval = setInterval(gameLoop, speed);
+        isPaused = false;
+        isGameOver = false; // Reset game over flag
+        document.getElementById("pauseButton").textContent = "⏸ Pause";
+        document.getElementById("bgMusic").play(); // Play background music
+      }
 
-                function togglePause() {
-                  if (isPaused) {
-                    gameInterval = setInterval(gameLoop, speed);
-                    document.getElementById("pauseButton").textContent = "⏸ Pause";
-                    document.getElementById("pausePopup").style.display = "none";
-                  } else {
-                    clearInterval(gameInterval);
-                    document.getElementById("pauseButton").textContent = "▶ Resume";
-                    document.getElementById("pausePopup").style.display = "block";
-                  }
-                  isPaused = !isPaused;
-                }
+      function reset() {
+        clearInterval(gameInterval);
+        snake = [{ x: 9 * box, y: 9 * box }];
+        direction = "RIGHT";
+        fruit = spawnFruit();
+        score = 0;
+        updateScoreDisplay();
+        document.removeEventListener("keydown", handleKeyPress);
+        document.addEventListener("keydown", handleKeyPress);
+        document.getElementById("gameOverPopup").style.display = "none"; // Hide the Game Over popup
+      }
 
-                function changeDirection(newDirection) {
-                  if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
-                  else if (newDirection === "DOWN" && direction !== "UP")
-                    direction = "DOWN";
-                  else if (newDirection === "LEFT" && direction !== "RIGHT")
-                    direction = "LEFT";
-                  else if (newDirection === "RIGHT" && direction !== "LEFT")
-                    direction = "RIGHT";
-                }
+      function togglePause() {
+        if (isPaused) {
+          gameInterval = setInterval(gameLoop, speed);
+          document.getElementById("pauseButton").textContent = "⏸ Pause";
+          document.getElementById("pausePopup").style.display = "none";
+        } else {
+          clearInterval(gameInterval);
+          document.getElementById("pauseButton").textContent = "▶ Resume";
+          document.getElementById("pausePopup").style.display = "block";
+        }
+        isPaused = !isPaused;
+      }
 
-                function spawnFruit() {
-                  return {
-                    x: Math.floor(Math.random() * (canvas.width / box)) * box,
-                    y: Math.floor(Math.random() * (canvas.height / box)) * box,
-                  };
-                }
+      function changeDirection(newDirection) {
+        if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
+        else if (newDirection === "DOWN" && direction !== "UP")
+          direction = "DOWN";
+        else if (newDirection === "LEFT" && direction !== "RIGHT")
+          direction = "LEFT";
+        else if (newDirection === "RIGHT" && direction !== "LEFT")
+          direction = "RIGHT";
+      }
 
-                function updateScoreDisplay() {
-                  document.getElementById("scoreDisplay").textContent = "Score: " + score;
-                }
+      function spawnFruit() {
+        return {
+          x: Math.floor(Math.random() * (canvas.width / box)) * box,
+          y: Math.floor(Math.random() * (canvas.height / box)) * box,
+        };
+      }
 
-                function handleKeyPress(event) {
-                  const key = event.keyCode;
-                  if (key === 37 && direction !== "RIGHT") direction = "LEFT";
-                  else if (key === 38 && direction !== "DOWN") direction = "UP";
-                  else if (key === 39 && direction !== "LEFT") direction = "RIGHT";
-                  else if (key === 40 && direction !== "UP") direction = "DOWN";
-                }
+      function updateScoreDisplay() {
+        document.getElementById("scoreDisplay").textContent = "Score: " + score;
+      }
 
-                function gameLoop() {
-                  let snakeX = snake[0].x;
-                  let snakeY = snake[0].y;
+      function handleKeyPress(event) {
+        const key = event.keyCode;
+        if (key === 37 && direction !== "RIGHT") direction = "LEFT";
+        else if (key === 38 && direction !== "DOWN") direction = "UP";
+        else if (key === 39 && direction !== "LEFT") direction = "RIGHT";
+        else if (key === 40 && direction !== "UP") direction = "DOWN";
+      }
 
-                  if (direction === "LEFT") snakeX -= box;
-                  if (direction === "RIGHT") snakeX += box;
-                  if (direction === "UP") snakeY -= box;
-                  if (direction === "DOWN") snakeY += box;
+      function gameLoop() {
+        let snakeX = snake[0].x;
+        let snakeY = snake[0].y;
 
-                  // Check for wall collision
-                  if (
-                    snakeX < 0 ||
-                    snakeY < 0 ||
-                    snakeX >= canvas.width ||
-                    snakeY >= canvas.height
-                  ) {
-                    // Play wall sound effect before game over
-                    document.getElementById("wallSound").play();
-                    setTimeout(() => {
-                      gameOver();
-                    }, 1000); // Delay game over sound for a second to allow punch sound to play
-                    return;
-                  }
+        if (direction === "LEFT") snakeX -= box;
+        if (direction === "RIGHT") snakeX += box;
+        if (direction === "UP") snakeY -= box;
+        if (direction === "DOWN") snakeY += box;
 
-                  // Check for self-collision
-                  if (collision(snake)) {
-                    // Play wall sound effect before game over
-                    document.getElementById("wallSound").play();
-                    setTimeout(() => {
-                      gameOver();
-                    }, 1000); // Delay game over sound for a second to allow punch sound to play
-                    return;
-                  }
+        // Check for wall collision
+        if (
+          snakeX < 0 ||
+          snakeY < 0 ||
+          snakeX >= canvas.width ||
+          snakeY >= canvas.height
+        ) {
+          // Play wall sound effect before game over
+          document.getElementById("wallSound").play();
+          setTimeout(() => {
+            gameOver();
+          }, 1000); // Delay game over sound for a second to allow punch sound to play
+          return;
+        }
 
-                  const newHead = { x: snakeX, y: snakeY };
+        // Check for self-collision
+        if (collision(snake)) {
+          // Play wall sound effect before game over
+          document.getElementById("wallSound").play();
+          setTimeout(() => {
+            gameOver();
+          }, 1000); // Delay game over sound for a second to allow punch sound to play
+          return;
+        }
 
-                  if (snakeX === fruit.x && snakeY === fruit.y) {
-                    score++;
-                    updateScoreDisplay();
-                    fruit = spawnFruit();
-                    document.getElementById("eatSound").play(); // Play eat sound effect
-                  } else {
-                    snake.pop();
-                  }
+        const newHead = { x: snakeX, y: snakeY };
 
-                  snake.unshift(newHead);
+        if (snakeX === fruit.x && snakeY === fruit.y) {
+          score++;
+          updateScoreDisplay();
+          fruit = spawnFruit();
+          document.getElementById("eatSound").play(); // Play eat sound effect
+        } else {
+          snake.pop();
+        }
 
-                  ctx.clearRect(0, 0, canvas.width, canvas.height);
+        snake.unshift(newHead);
 
-                  // Draw snake
-                  for (let i = 0; i < snake.length; i++) {
-                    ctx.fillStyle = i === 0 ? "#519ccc" : "#61dafb";
-                    ctx.fillRect(snake[i].x, snake[i].y, box, box);
-                  }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                  // Draw fruit
-                  ctx.fillStyle = "#ff0d72";
-                  ctx.fillRect(fruit.x, fruit.y, box, box);
-                }
+        // Draw snake
+        for (let i = 0; i < snake.length; i++) {
+          ctx.fillStyle = i === 0 ? "#519ccc" : "#61dafb";
+          ctx.fillRect(snake[i].x, snake[i].y, box, box);
+        }
 
-                function gameOver() {
-    if (isGameOver) return; // Prevent showing popup again if game is already over
-    isGameOver = true; // Set the game over flag
-    clearInterval(gameInterval);
-    document.getElementById("bgMusic").pause(); // Pause background music
-    document.getElementById("gameOverSound").play(); // Play game over sound
-    document.getElementById("finalScore").textContent = score; // Display the final score
-    document.getElementById("gameOverPopup").style.display = "block"; // Show Game Over popup
+        // Draw fruit
+        ctx.fillStyle = "#ff0d72";
+        ctx.fillRect(fruit.x, fruit.y, box, box);
+      }
 
-    // Retrieve the scores array and high score from localStorage
-    let scores = JSON.parse(localStorage.getItem("scores")) || [];
-    let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+      function gameOver() {
+        if (isGameOver) return; // Prevent showing popup again if game is already over
+        isGameOver = true; // Set the game over flag
+        clearInterval(gameInterval);
+        document.getElementById("bgMusic").pause(); // Pause background music
+        document.getElementById("gameOverSound").play(); // Play game over sound
+        document.getElementById("finalScore").textContent = score; // Display the final score
+        document.getElementById("gameOverPopup").style.display = "block"; // Show Game Over popup
 
-    // Update scores array
-    scores.push(score);
-    localStorage.setItem("scores", JSON.stringify(scores));
+        // Retrieve the scores array and high score from localStorage
+        let scores = JSON.parse(localStorage.getItem("scores")) || [];
+        let highScore = parseInt(localStorage.getItem("highScore")) || 0;
 
-    // Check for high score
-    if (score > highScore) {
-        highScore = score; // Update the high score
-        localStorage.setItem("highScore", highScore); // Save the new high score
-    }
+        // Update scores array
+        scores.push(score);
+        localStorage.setItem("scores", JSON.stringify(scores));
 
-    // Update score history and high score display
-    document.getElementById("highScoreDisplay").textContent = "Best Score: " + highScore; // Update high score display
-    document.getElementById("scoreHistory").textContent = scores.join(", "); // Update score history display
-}
+        // Check for high score
+        if (score > highScore) {
+          highScore = score; // Update the high score
+          localStorage.setItem("highScore", highScore); // Save the new high score
+        }
 
+        // Update score history and high score display
+        document.getElementById("highScoreDisplay").textContent =
+          "Best Score: " + highScore; // Update high score display
+        document.getElementById("scoreHistory").textContent = scores.join(", "); // Update score history display
+      }
 
-                function closePopup() {
-                  document.getElementById("gameOverPopup").style.display = "none"; // Close Game Over popup
-                  document.getElementById("gameOverSound").pause(); // Stop the game over sound
-                  document.getElementById("gameOverSound").currentTime = 0; // Reset the sound to the beginning
-                }
+      function closePopup() {
+        document.getElementById("gameOverPopup").style.display = "none"; // Close Game Over popup
+        document.getElementById("gameOverSound").pause(); // Stop the game over sound
+        document.getElementById("gameOverSound").currentTime = 0; // Reset the sound to the beginning
+      }
 
-                function collision(snake) {
-                  for (let i = 1; i < snake.length; i++) {
-                    if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
-                      return true; // Collision with itself
-                    }
-                  }
-                  return false; // No collision
-                }
+      function collision(snake) {
+        for (let i = 1; i < snake.length; i++) {
+          if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+            return true; // Collision with itself
+          }
+        }
+        return false; // No collision
+      }
 
-                // Function to hide the splash screen
-                function hideSplashScreen() {
-                  document.getElementById("splashScreen").style.display = "none";
-                }
+      // Function to hide the splash screen
+      function hideSplashScreen() {
+        document.getElementById("splashScreen").style.display = "none";
+      }
 
-                // Display the splash screen for 1.5 seconds
-                setTimeout(hideSplashScreen, 1500);
-              </script>
-            </body>
-          </html>
+      // Display the splash screen for 1.5 seconds
+      setTimeout(hideSplashScreen, 1500);
+    </script>
+  </body>
+</html>

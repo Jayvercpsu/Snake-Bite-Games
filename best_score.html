@@ -1,240 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="best_score.css" />
     <title>Best Score</title>
-    <style>
-      
-        body {
-            background-color: #1c1e22;
-            font-family: "Arial", sans-serif;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            justify-content: flex-start; /* Align items to the top */
-            text-align: center;
-        }
-
-        h1 {
-            color: #61dafb; /* Light blue color */
-            margin: 20px 0;
-            font-size: 3rem; /* Increased font size */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Added text shadow */
-        }
-
-        #backButton {
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            font-size: 1.5em; /* Increased font size */
-            color: #282c34; /* Dark color for contrast */
-            background-color: #61dafb; /* Primary color */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s; /* Transition effects */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center; /* Center arrow vertically */
-        }
-
-        #backButton:hover {
-            background-color: #21a1f1; /* Darker blue on hover */
-            transform: translateY(-2px); /* Slight lift effect on hover */
-        }
-
-        #backButton:before {
-            content: "←"; /* Left arrow character */
-            margin-right: 10px; /* Space between arrow and button text */
-            font-size: 1.2em; /* Font size for the arrow */
-        }
-
-        #bestScoreDisplay {
-            font-size: 2em;
-            color: #2e8b57; /* Green color for best score */
-            margin-top: 10px;
-            padding: 15px;
-            border: 2px solid #2e8b57; /* Border around best score */
-            border-radius: 8px;
-            background-color: #282c34; /* Darker background for contrast */
-            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* Deeper shadow for depth */
-            transition: transform 0.2s ease; /* Hover effect */
-        }
-
-        #bestScoreDisplay:hover {
-            transform: scale(1.02); /* Slight scale effect on hover */
-        }
-
-        h2 {
-            color: #ffffff;
-            font-size: 2rem; /* Adjusted font size */
-        }
-
-        /* Scrollable score history */
-        #scoreHistoryWrapper {
-            max-height: 200px; /* Set a max height for the scrollable area */
-            overflow-y: auto; /* Enable vertical scrolling */
-            width: 100%;
-            max-width: 400px; /* Set a maximum width */
-            border: 2px solid #61dafb; /* Border around score history */
-            border-radius: 8px; /* Rounded corners */
-            background-color: #292b2f; /* Background color for contrast */
-            margin: 0 auto; /* Center the score history */
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0; /* Remove default margins */
-        }
-
-        li {
-            padding: 15px;
-            margin: 5px 0;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            transition: background 0.3s ease;
-            font-size: 1.2em;
-            background: #292b2f; /* Dark gray background */
-            position: relative; /* For positioning the dropdown */
-        }
-
-        li:hover {
-            background: #61dafb; /* Highlight color on hover */
-            color: #282c34; /* Dark text on hover */
-        }
-
-        /* Dropdown menu */
-        .dropdown {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: none; /* Hidden by default */
-            background: #61dafb;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .dropdown-item {
-            padding: 10px;
-            cursor: pointer;
-            color: #282c34;
-        }
-
-        .dropdown-item:hover {
-            background: #21a1f1; /* Darker blue on hover */
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            #backButton {
-                width: 100%; /* Full width on small screens */
-            }
-
-            h1,
-            h2 {
-                font-size: 1.5em; /* Adjust font size for smaller screens */
-            }
-
-            #bestScoreDisplay {
-                font-size: 1.5em; /* Adjust font size for smaller screens */
-            }
-
-            li {
-                font-size: 1em; /* Adjust list item font size */
-            }
-        }
-    </style>
-</head>
-<body>
-    <button id="backButton" onclick="window.location.href='index.html'">
-        Back to Game
+  </head>
+  <body>
+    <button id="backButton" onclick="playSound(event, 'index.html')">
+      Back to Game
     </button>
     <h1>Your Highest Score</h1>
     <div id="bestScoreDisplay">0</div>
-    <br>
+    <br />
     <h2>Score History:</h2>
     <div id="scoreHistoryWrapper">
-        <ul id="scoreHistoryDisplay"></ul>
+      <ul id="scoreHistoryDisplay"></ul>
     </div>
 
+    <!-- Audio element for the sound effect -->
+    <audio id="sound-effect" src="perfect-fart.mp3" preload="auto"></audio>
+    <audio id="bg-music" src="bgmusic.mp3" preload="auto" loop></audio> <!-- Background music -->
+
     <script>
-        // Retrieve the best score and scores array from localStorage
-        const bestScore = localStorage.getItem("highScore") || 0;
-        let scores = JSON.parse(localStorage.getItem("scores")) || [];
+      // Start background music when the page loads
+      window.onload = function() {
+        const bgMusic = document.getElementById("bg-music");
+        bgMusic.play().catch((error) => {
+          console.error("Error playing background music:", error);
+        });
+      };
 
-        // Display the best score
-        document.getElementById("bestScoreDisplay").textContent = "" + bestScore;
-
-        // Display the score history
-        const scoreHistoryDisplay = document.getElementById("scoreHistoryDisplay");
-        scores.forEach((score, index) => {
-            if (score > 0) { // Only include scores greater than 0
-                const listItem = document.createElement("li");
-                listItem.textContent = "Game " + (index + 1) + ": Score " + score;
-
-                // Create the dropdown menu for actions
-                const dropdown = document.createElement("div");
-                dropdown.className = "dropdown";
-                dropdown.innerHTML = `
-                    <div class="dropdown-item" onclick="deleteScore(${index})">Delete Score</div>
-                `;
-                listItem.appendChild(dropdown);
-
-                // Add three dots for the dropdown trigger
-                const threeDots = document.createElement("span");
-                threeDots.textContent = "⋮"; // Three dots character
-                threeDots.style.cursor = "pointer";
-                threeDots.style.marginLeft = "10px"; // Space between score and dots
-                threeDots.onclick = function () {
-                    // Toggle dropdown visibility
-                    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-                };
-
-                listItem.appendChild(threeDots);
-                scoreHistoryDisplay.appendChild(listItem);
-            }
+      function playSound(event, url) {
+        event.preventDefault(); // Prevent default link behavior
+        const sound = document.getElementById("sound-effect");
+        sound.currentTime = 0; // Rewind to the start
+        sound.play().catch((error) => {
+          console.error("Error playing sound:", error);
         });
 
-        // If there are no scores, show a message
-        if (scores.length === 0 || !scores.some(score => score > 0)) {
-            const noScoresItem = document.createElement("li");
-            noScoresItem.textContent = "No scores recorded yet.";
-            scoreHistoryDisplay.appendChild(noScoresItem);
+        // Stop background music when navigating away
+        const bgMusic = document.getElementById("bg-music");
+        bgMusic.pause(); // Pause the background music
+
+        // Navigate to the URL after a delay
+        setTimeout(() => {
+          window.location.href = url;
+        }, 300); // Adjust time as needed (1000 ms = 1 second)
+      }
+
+      // Retrieve the best score and scores array from localStorage
+      const bestScore = localStorage.getItem("highScore") || 0;
+      let scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+      // Display the best score
+      document.getElementById("bestScoreDisplay").textContent = "" + bestScore;
+
+      // Function to confirm and delete individual score
+      function confirmDelete(index) {
+        const isConfirmed = confirm("Are you sure you want to delete this score?");
+        if (isConfirmed) {
+          deleteScore(index); // Call deleteScore only if confirmed
         }
+      }
 
-        // Function to delete individual score
-        function deleteScore(index) {
-            scores.splice(index, 1); // Remove score from array
-            localStorage.setItem("scores", JSON.stringify(scores)); // Update localStorage
-            location.reload(); // Reload page to update displayed scores
+      // Display the score history
+      const scoreHistoryDisplay = document.getElementById("scoreHistoryDisplay");
+      scores.forEach((score, index) => {
+        if (score > 0) {
+          // Only include scores greater than 0
+          const listItem = document.createElement("li");
+          listItem.textContent = "Game " + (index + 1) + ": Score " + score;
+
+          // Create the dropdown menu for actions
+          const dropdown = document.createElement("div");
+          dropdown.className = "dropdown";
+          dropdown.style.display = "none"; // Initially hidden
+          dropdown.innerHTML = `<div class="dropdown-item" onclick="confirmDelete(${index})">Delete Score</div>`;
+
+          listItem.appendChild(dropdown);
+
+          // Add three dots for the dropdown trigger
+          const threeDots = document.createElement("span");
+          threeDots.textContent = "⋮"; // Three dots character
+          threeDots.style.cursor = "pointer";
+          threeDots.style.marginLeft = "10px"; // Space between score and dots
+          threeDots.onclick = function (event) {
+            event.stopPropagation(); // Prevent this click from triggering document click
+            hideAllDropdowns(); // Close other open dropdowns
+            dropdown.style.display = "block"; // Show current dropdown
+          };
+
+          listItem.appendChild(threeDots);
+          scoreHistoryDisplay.appendChild(listItem);
         }
+      });
 
-        // Function to delete all scores
-        function deleteAllScores() {
-            scores = []; // Clear scores array
-            localStorage.removeItem("scores"); // Remove from localStorage
-            location.reload(); // Reload page to update displayed scores
-        }
+      // If there are no scores, show a message
+      if (scores.length === 0 || !scores.some((score) => score > 0)) {
+        const noScoresItem = document.createElement("li");
+        noScoresItem.textContent = "No scores recorded yet.";
+        scoreHistoryDisplay.appendChild(noScoresItem);
+      }
 
-        // Create a button to delete all scores
-        const deleteAllButton = document.createElement("button");
-        deleteAllButton.textContent = "Delete All Scores";
-        deleteAllButton.style.marginTop = "20px";
-        deleteAllButton.style.padding = "10px 20px";
-        deleteAllButton.style.fontSize = "1.2em";
-        deleteAllButton.style.backgroundColor = "#ff4d4d"; // Red color for danger
-        deleteAllButton.style.border = "none";
-        deleteAllButton.style.borderRadius = "5px";
-        deleteAllButton.style.cursor = "pointer";
-        deleteAllButton.onclick = deleteAllScores;
+      // Function to delete individual score
+      function deleteScore(index) {
+        scores.splice(index, 1); // Remove score from array
+        localStorage.setItem("scores", JSON.stringify(scores)); // Update localStorage
+        location.reload(); // Reload page to update displayed scores
+      }
 
-        document.body.appendChild(deleteAllButton);
+      // Function to delete all scores and reset the high score
+      function deleteAllScores() {
+        scores = []; // Clear scores array
+        localStorage.removeItem("scores"); // Remove scores from localStorage
+        localStorage.removeItem("highScore"); // Remove high score from localStorage
+
+        // Update the display to show reset high score
+        document.getElementById("bestScoreDisplay").textContent = "0";
+
+        location.reload(); // Reload page to update displayed scores
+      }
+
+      // Create a button to delete all scores
+      const deleteAllButton = document.createElement("button");
+      deleteAllButton.textContent = "Reset Score";
+      deleteAllButton.style.marginTop = "20px";
+      deleteAllButton.style.padding = "10px 20px";
+      deleteAllButton.style.fontSize = "1.2em";
+      deleteAllButton.style.backgroundColor = "#ff4d4d"; // Red color for danger
+      deleteAllButton.style.border = "none";
+      deleteAllButton.style.borderRadius = "5px";
+      deleteAllButton.style.cursor = "pointer";
+      deleteAllButton.onclick = deleteAllScores;
+      document.body.appendChild(deleteAllButton);
+
+      // Close all dropdowns when clicking outside
+      document.addEventListener("click", hideAllDropdowns);
+
+      function hideAllDropdowns() {
+        document.querySelectorAll(".dropdown").forEach((dropdown) => {
+          dropdown.style.display = "none"; // Hide all dropdowns
+        });
+      }
     </script>
-</body>
+  </body>
 </html>

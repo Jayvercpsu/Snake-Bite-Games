@@ -18,14 +18,17 @@
       justify-content: center;
       min-height: 100vh;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #4b79a1, #283e51);
+      background-image: url("snake.jpg");
+      background-size: cover; /* Cover the entire viewport */
+      background-position: center; /* Center the background image */
       color: #fff;
       overflow: hidden;
-      margin: 0;
     }
     .container {
       text-align: center;
       padding: 20px;
+      background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+      border-radius: 10px; /* Rounded corners for the container */
     }
     h1 {
       font-size: 2.5em;
@@ -39,6 +42,7 @@
       display: flex;
       justify-content: center;
       gap: 10px;
+      flex-wrap: wrap; /* Ensure buttons wrap on smaller screens */
     }
     .btn {
       display: inline-block;
@@ -54,6 +58,19 @@
     .btn:hover {
       background: #ff6b6b;
     }
+    /* Responsive font sizes */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+      p {
+        font-size: 1em;
+      }
+      .btn {
+        padding: 0.6em 1.2em;
+        font-size: 0.9em;
+      }
+    }
   </style>
 </head>
 <body>
@@ -61,11 +78,43 @@
     <h1>Welcome to Snake Game</h1>
     <p>Challenge yourself and reach the top of the leaderboard!</p>
     <div class="btn-container">
-      <a href="home.html" class="btn">🎮 Play Game</a>
-      <a href="best_score.html" class="btn">🏆 Best Score</a>
-      <a href="about.html" class="btn">ℹ️ About</a>
+      <a href="home.html" class="btn" onclick="playGame(event)">🎮 Play Game</a>
+      <a href="best_score.html" class="btn" onclick="playSound(event, 'best_score.html')">🏆 Best Score</a>
+      <a href="about.html" class="btn" onclick="playSound(event, 'about.html')">ℹ️ About</a>
     </div>
   </div>
-  
+
+  <!-- Audio elements for background music and sound effect -->
+  <audio id="bg-music" src="bgmusic.mp3" preload="auto" loop></audio>
+  <audio id="sound-effect" src="perfect-fart.mp3" preload="auto"></audio>
+
+  <script>
+    // Start background music on page load
+    const bgMusic = document.getElementById("bg-music");
+    bgMusic.volume = 0.5; // Set volume for background music
+    bgMusic.play().catch((error) => {
+      console.error("Error playing background music:", error);
+    });
+
+    function playSound(event, url) {
+      event.preventDefault(); // Prevent default link behavior
+      const sound = document.getElementById("sound-effect");
+      sound.currentTime = 0; // Rewind to the start
+      sound.play().catch((error) => {
+        console.error("Error playing sound:", error);
+      });
+      // Navigate to the URL after a delay
+      setTimeout(() => {
+        window.location.href = url;
+      }, 300); // Adjust time as needed (300 ms = 0.3 seconds)
+    }
+
+    function playGame(event) {
+      event.preventDefault(); // Prevent default link behavior
+      bgMusic.pause(); // Stop the background music
+      // Navigate to the home page immediately
+      window.location.href = "home.html"; // Change this URL as necessary
+    }
+  </script>
 </body>
 </html>
